@@ -1,0 +1,8 @@
+{
+  "name": "ionic-grocery",
+  "integrations": {
+    "capacitor": {},
+    "cordova": {}
+  },
+  "type": "angular"
+}

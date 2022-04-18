@@ -1,0 +1,13 @@
+{
+  "cordova-plugin-googleplus": {
+    "source": {
+      "type": "registry",
+      "id": "cordova-plugin-googleplus@^8.5.2"
+    },
+    "is_top_level": true,
+    "variables": {
+      "REVERSED_CLIENT_ID": "Grocery-Auth",
+      "WEB_APPLICATION_CLIENT_ID": "851911116686-knvrb8t86ecrd6juv1ootmj27lgruv0h.apps.googleusercontent.com"
+    }
+  }
+}
