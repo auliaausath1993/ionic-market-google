@@ -10,6 +10,7 @@ import { GooglePlus } from '@ionic-native/google-plus/ngx';
 import { FirebaseX } from '@ionic-native/firebase-x/ngx';
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase';
+import { StorageMap } from '@ngx-pwa/local-storage';
 
 
 @Component({
@@ -29,7 +30,7 @@ export class SignupPage implements OnInit {
   constructor(
     private firebaseX: FirebaseX,
     private loadingctrl: LoadingController,
-    // private events: Events,
+    private storage: StorageMap,
     private formBuilder: FormBuilder,
     private router: Router,
     private http: HttpClient,
@@ -167,15 +168,14 @@ export class SignupPage implements OnInit {
   doRegister(data){
     let val = data;
     console.log(val);
-    this.loading = this.loadingctrl.create({
+    /* this.loading = this.loadingctrl.create({
       message: 'Please Wait'
     }).then((res) => {
       res.present();
 
       res.onDidDismiss().then((dis) => {
-        //console.log('Loading dismissed!');
       });
-    });
+    }); */
 
     let postData = {
       "nama": val.name,
@@ -186,25 +186,14 @@ export class SignupPage implements OnInit {
       "fcm_token": 123
     }
 
-    this.http.post(APIURL.apiURL + 'register_v2', postData)
+    this.http.post(APIURL.apiURL + 'register_gmail', postData)
     .subscribe(data => {
         console.log(data);
         let status = data['status'];
         if(status == "Success"){
-          this.toastController.create({
-            message: data['message'],
-            position: 'bottom',
-            duration: 5000,
-            buttons: [
-              {
-                side: 'end',
-                icon: 'information-circle'
-              }
-            ]
-          }).then((toast) => {
-            toast.present();
+          this.storage.set('user',status).subscribe(() => {
+            this.router.navigate(['/shop']);
           });
-          this.presentModal();
         }
         else{
           this.toastController.create({
