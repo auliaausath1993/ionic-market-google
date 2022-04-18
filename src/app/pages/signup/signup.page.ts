@@ -168,14 +168,15 @@ export class SignupPage implements OnInit {
   doRegister(data){
     let val = data;
     console.log(val);
-    /* this.loading = this.loadingctrl.create({
+    this.loading = this.loadingctrl.create({
       message: 'Please Wait'
     }).then((res) => {
       res.present();
 
       res.onDidDismiss().then((dis) => {
+        //console.log('Loading dismissed!');
       });
-    }); */
+    });
 
     let postData = {
       "nama": val.name,
@@ -190,10 +191,27 @@ export class SignupPage implements OnInit {
     .subscribe(data => {
         console.log(data);
         let status = data['status'];
+        /* if(status == "Success"){
+          localStorage.setItem('customer_id', data['customer_id']);
+          localStorage.setItem('customer_name', data['customer_name']);
+          localStorage.setItem('customer_email', data['customer_email']);
+          this.router.navigate(['/tabs/shop']);
+        } */
         if(status == "Success"){
-          this.storage.set('user',status).subscribe(() => {
-            this.router.navigate(['/shop']);
+          this.toastController.create({
+            message: data['message'],
+            position: 'bottom',
+            duration: 5000,
+            buttons: [
+              {
+                side: 'end',
+                icon: 'information-circle'
+              }
+            ]
+          }).then((toast) => {
+            toast.present();
           });
+          this.presentModal();
         }
         else{
           this.toastController.create({
