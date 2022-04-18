@@ -224,7 +224,11 @@ export class ShopPage {
   }
 
   getCart() {
-    this.data = this.http.get(APIURL.apiURL + 'get_cart_total');
+    let reqData = {
+      "customer_id": localStorage.getItem("customer_id"),
+      "token": "8abf4902a0db27dcb7f62a01c2fd0d0a"
+    }
+    this.data = this.http.post(APIURL.apiURL + 'get_cart_total', reqData)
     this.data.subscribe(result => {
       this.dataTotalCart = result;
       this.status = this.dataTotalCart.status;
