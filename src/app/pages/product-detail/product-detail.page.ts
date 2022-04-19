@@ -90,7 +90,8 @@ export class ProductDetailPage implements OnInit {
           price: data['harga'],
           quantity: 1,
         };
-        this.product_variant = data['variant'];
+        console.log(data)
+        this.product_variant = (data['variant'] == undefined ? []:data['variant']);
         this.nutrisi = data['keterangan'];
         this.jumData = this.product_variant.length;
       });

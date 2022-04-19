@@ -10,7 +10,7 @@ import { GooglePlus } from '@ionic-native/google-plus/ngx';
 import { FirebaseX } from '@ionic-native/firebase-x/ngx';
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase';
-import { StorageMap } from '@ngx-pwa/local-storage';
+import auth from 'firebase/app';
 
 
 @Component({
@@ -30,7 +30,6 @@ export class SignupPage implements OnInit {
   constructor(
     private firebaseX: FirebaseX,
     private loadingctrl: LoadingController,
-    private storage: StorageMap,
     private formBuilder: FormBuilder,
     private router: Router,
     private http: HttpClient,
@@ -123,7 +122,7 @@ export class SignupPage implements OnInit {
       if (this.platform.is('cordova')) {
         if (this.platform.is('android')) {
           params = {
-            webClientId: '851911116686-tm6heij2ltrdubqtjo4645mi79nh3vid.apps.googleusercontent.com', //  webclientID 'string'
+            webClientId: '851911116686-knvrb8t86ecrd6juv1ootmj27lgruv0h.apps.googleusercontent.com', //  androidID 'string'
             offline: true
           };
         } else {
@@ -143,12 +142,18 @@ export class SignupPage implements OnInit {
         });
       } else{
         console.log('else...');
-        this.fireAuth.signInWithPopup(new firebase.default.auth.GoogleAuthProvider()).then(success => {
+        this.fireAuth.signInWithPopup(new auth.auth.GoogleAuthProvider()).then(success => {
           console.log('success in google login', success);
           this.doRegister(success.user);
         }).catch(err => {
           console.log(err.message, 'error in google login');
         });
+        // this.fireAuth.signInWithPopup(new firebase.default.auth.GoogleAuthProvider()).then(success => {
+        //   console.log('success in google login', success);
+        //   this.doRegister(success.user);
+        // }).catch(err => {
+        //   console.log(err.message, 'error in google login');
+        // });
       }
     }
     
@@ -167,7 +172,6 @@ export class SignupPage implements OnInit {
     
     doRegister(data){
       let val = data;
-      console.log(val);
       this.loading = this.loadingctrl.create({
         message: 'Please Wait'
       }).then((res) => {
@@ -197,21 +201,31 @@ export class SignupPage implements OnInit {
           localStorage.setItem('customer_name', data['customer_name']);
           localStorage.setItem('customer_email', data['customer_email']);
           this.router.navigate(['/tabs/shop']);
-        }
-        else{
-          this.toastController.create({
-            message: data['error'],
-            position: 'bottom',
-            duration: 5000,
-            buttons: [
-              {
-                side: 'end',
-                icon: 'warning'
-              }
-            ]
-          }).then((toast) => {
-            toast.present();
-          });
+          this.loadingctrl.dismiss();
+        } else {
+          if(data['error'].includes('Email is exists')) {
+
+            
+            //check ke be jika user sudah terdaftar dan valid maka masuk ke beranda
+            this.loadingctrl.dismiss();
+
+
+          } else {
+            this.toastController.create({
+              message: data['error'],
+              position: 'bottom',
+              duration: 5000,
+              buttons: [
+                {
+                  side: 'end',
+                  icon: 'warning'
+                }
+              ]
+            }).then((toast) => {
+              toast.present();
+            });
+            this.loadingctrl.dismiss();
+          }
         }
       });
     }

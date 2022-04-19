@@ -40,13 +40,12 @@ export class AccountPage implements OnInit {
   customer_name: string;
   customer_email: string;
   constructor(private router: Router, private alertController: AlertController) {
-    this.customer_name = localStorage.getItem('customer_name');
-    this.customer_email = localStorage.getItem('customer_email');
-    this.isLogging();
   }
 
   ngOnInit() {
-    
+    this.customer_name = localStorage.getItem('customer_name');
+    this.customer_email = localStorage.getItem('customer_email');
+    this.isLogging();
   }
 
   isLogging(){
