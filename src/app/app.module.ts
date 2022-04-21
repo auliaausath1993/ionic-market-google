@@ -14,6 +14,12 @@ import { FirebaseX } from '@ionic-native/firebase-x/ngx';
 import { GooglePlus } from '@ionic-native/google-plus/ngx';
 import { AngularFireModule } from '@angular/fire';
 
+/**
+ * Camera Plugin
+ */
+ import { Camera } from '@ionic-native/Camera/ngx';
+ import { File } from '@ionic-native/file/ngx';
+
 
 /**
  * Import Module Http
@@ -40,6 +46,8 @@ import { CommonModule } from '@angular/common';
     FirebaseX,
     StatusBar,
     SplashScreen,
+    Camera,
+    File,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

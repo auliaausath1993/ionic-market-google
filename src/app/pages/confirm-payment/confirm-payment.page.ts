@@ -6,6 +6,9 @@ import { APIURL } from 'src/app/api-url';
 
 import { LoadingController, ModalController, ToastController } from '@ionic/angular';
 
+import { Camera, CameraOptions } from '@ionic-native/Camera/ngx';
+import { ActionSheetController } from '@ionic/angular';
+
 @Component({
   selector: 'app-confirm-payment',
   templateUrl: './confirm-payment.page.html',
@@ -18,7 +21,9 @@ export class ConfirmPaymentPage implements OnInit {
   isLoadingResults = false;
 
 
-  constructor(private route: ActivatedRoute, private router: Router,private formBuilder: FormBuilder, public http: HttpClient, public toastController: ToastController) { }
+  constructor(private route: ActivatedRoute, private camera: Camera,
+    public actionSheetController: ActionSheetController,
+    private router: Router,private formBuilder: FormBuilder, public http: HttpClient, public toastController: ToastController) { }
 
   dataAccount: any = [];
   
@@ -93,6 +98,55 @@ export class ConfirmPaymentPage implements OnInit {
       }
       
     });
+  }
+
+  croppedImagepath = "";
+  isLoading = false;
+
+  imagePickerOptions = {
+    maximumImagesCount: 1,
+    quality: 50
+  };
+
+  pickImage(sourceType) {
+    const options: CameraOptions = {
+      quality: 100,
+      sourceType: sourceType,
+      destinationType: this.camera.DestinationType.DATA_URL,
+      encodingType: this.camera.EncodingType.JPEG,
+      mediaType: this.camera.MediaType.PICTURE
+    }
+    this.camera.getPicture(options).then((imageData) => {
+      // imageData is either a base64 encoded string or a file URI
+      this.croppedImagepath = 'data:image/jpeg;base64,' + imageData;
+    }, (err) => {
+      // Handle error
+    });
+  }
+
+  async selectImage() {
+    debugger
+    const actionSheet = await this.actionSheetController.create({
+      header: "Select Image source",
+      buttons: [{
+        text: 'Load from Library',
+        handler: () => {
+          this.pickImage(this.camera.PictureSourceType.PHOTOLIBRARY);
+        }
+      },
+      {
+        text: 'Use Camera',
+        handler: () => {
+          this.pickImage(this.camera.PictureSourceType.CAMERA);
+        }
+      },
+      {
+        text: 'Cancel',
+        role: 'cancel'
+      }
+      ]
+    });
+    await actionSheet.present();
   }
 
 }
